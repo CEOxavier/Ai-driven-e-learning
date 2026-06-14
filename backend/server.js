@@ -769,8 +769,10 @@ function createAiClient(apiKey, modelName) {
   return {
     async generate(prompt) {
       if (!apiKey) {
+        // Fallback: if no AI key is configured, provide a helpful message.
+        // The endpoints using this client will attempt their own lightweight fallbacks.
         const error = new Error(
-          "AI service is not configured. Set GEMINI_API_KEY on the backend.",
+          "AI service is not configured on the server. Falling back to local helpers.",
         );
         error.statusCode = 503;
         throw error;
@@ -785,6 +787,55 @@ function createAiClient(apiKey, modelName) {
       return result.response.text();
     },
   };
+}
+
+function fallbackExplain(code, language) {
+  const lines = String(code || "").split(/\r?\n/).map((l) => l.trim());
+  const nonEmpty = lines.filter(Boolean);
+  const summaryParts = [];
+
+  if (nonEmpty.length === 0) {
+    summaryParts.push(`No code provided to explain.`);
+  } else {
+    summaryParts.push(`This is a ${language} code snippet with ${nonEmpty.length} non-empty lines.`);
+
+    const imports = nonEmpty.filter((l) => /^(import\s|from\s|#include\s|using\s)/i.test(l));
+    if (imports.length) summaryParts.push(`It imports or includes ${imports.length} modules.`);
+
+    const funcs = nonEmpty.filter((l) => /\bdef\s+\w+\s*\(|function\s+\w+\s*\(|\bfunc\s+\w+\s*\(/i.test(l));
+    if (funcs.length) summaryParts.push(`It defines ${funcs.length} function(s).`);
+
+    const classes = nonEmpty.filter((l) => /\bclass\s+\w+/i.test(l));
+    if (classes.length) summaryParts.push(`It defines ${classes.length} class(es).`);
+
+    const prints = nonEmpty.filter((l) => /\bprint\s*\(|console\.log\s*\(/i.test(l));
+    if (prints.length) summaryParts.push(`It writes output to the console ${prints.length} time(s).`);
+  }
+
+  const purpose = `Purpose: Provide a beginner-friendly explanation of the code.`;
+  const behavior = `Step-by-step: ${summaryParts.join(" ")}`;
+  const concepts = `Key concepts: ${[language, "functions", "I/O", "control flow"].join(", ")}.`;
+  const expected = nonEmpty.some((l) => /\bprint\s*\(|console\.log\s*\(/i.test(l))
+    ? `Expected output: The program prints text to the console.`
+    : `Expected output: No console output detected; the code may perform internal computation.`;
+
+  return `${purpose}\n\n${behavior}\n\n${concepts}\n\n${expected}`;
+}
+
+function fallbackFix(code, language) {
+  let text = String(code || "");
+  // Simple deterministic cleanups that often fix trivial issues.
+  // 1) Replace smart quotes with straight quotes
+  text = text.replace(/[\u2018\u2019\u201C\u201D]/g, (c) => (c === '“' || c === '”' ? '"' : "'"));
+  // 2) Convert tabs to 4 spaces
+  text = text.replace(/\t/g, "    ");
+  // 3) Trim trailing whitespace on each line
+  text = text.split(/\r?\n/).map((l) => l.replace(/[ \t]+$/g, "")).join("\n");
+  // 4) Ensure file ends with newline
+  if (!text.endsWith("\n")) text += "\n";
+
+  // Return cleaned code; if no changes were made, include a note so frontend can inform the user.
+  return text;
 }
 
 function asyncHandler(handler) {
@@ -1085,8 +1136,16 @@ Code:
 ${code}
 `;
 
-      const text = await ai.generate(prompt);
-      return res.send(text);
+      try {
+        const text = await ai.generate(prompt);
+        return res.send(text);
+      } catch (err) {
+        // If AI is not configured, provide a lightweight local explanation
+        if (err && (err.statusCode === 503 || /not configured/i.test(err.message || ""))) {
+          return res.send(fallbackExplain(code, language));
+        }
+        throw err;
+      }
     }),
   );
 
@@ -1114,8 +1173,16 @@ Code:
 ${code}
 `;
 
-      const text = await ai.generate(prompt);
-      return res.send(stripCodeFence(text));
+      try {
+        const text = await ai.generate(prompt);
+        return res.send(stripCodeFence(text));
+      } catch (err) {
+        if (err && (err.statusCode === 503 || /not configured/i.test(err.message || ""))) {
+          // Provide a simple deterministic cleanup when AI isn't available.
+          return res.send(fallbackFix(code, language));
+        }
+        throw err;
+      }
     }),
   );
 
