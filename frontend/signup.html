@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up - AI Learn</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body class="auth-page">
+    <header class="navbar-wrap">
+      <nav class="top-bar" aria-label="Authentication navigation">
+        <a class="brand" href="index.html">AI <span>Learn</span></a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="login.html" class="btn secondary">Login</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="auth-main">
+      <section class="auth-copy" aria-labelledby="signup-title">
+        <p class="eyebrow">Create your account</p>
+        <h1 id="signup-title">Build skill, confidence, and momentum.</h1>
+        <p>
+          Start with a programming path, practice in the playground, and use the AI tutor
+          when a concept needs a clearer explanation.
+        </p>
+        <ul class="auth-points">
+          <li>Python, JavaScript, Java, C++, and Go paths</li>
+          <li>Interactive quizzes and confidence tracking</li>
+          <li>AI explain and fix tools for code practice</li>
+        </ul>
+      </section>
+
+      <section class="login-card" aria-labelledby="form-title">
+        <h2 id="form-title">Create Account</h2>
+        <p class="subtitle">Join the AI Learn community today.</p>
+
+        <form id="signupForm" novalidate>
+          <div class="form-field">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Choose a username"
+              autocomplete="username"
+              minlength="3"
+              required
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="email">Email address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="you@example.com"
+              autocomplete="email"
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Create a password"
+              autocomplete="new-password"
+              minlength="6"
+              required
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="confirmPassword">Confirm password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="Repeat your password"
+              autocomplete="new-password"
+              minlength="6"
+              required
+            />
+          </div>
+
+          <button type="submit" data-default-label="Sign Up">Sign Up</button>
+        </form>
+
+        <p class="signup-text">
+          Already have an account?
+          <a href="login.html">Login here</a>
+        </p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>&copy; <span data-current-year>2026</span> AI Learn</span>
+        <a href="index.html">Back to home</a>
+      </div>
+    </footer>
+
+    <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+  </body>
+</html>

@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - AI Learn</title>
+    <link rel="stylesheet" href="dashboard.css" />
+  </head>
+
+  <body>
+    <header class="top-nav">
+      <a class="brand-btn" href="index.html">AI Learn</a>
+
+      <button
+        class="nav-toggle"
+        id="dashboardNavToggle"
+        type="button"
+        aria-label="Toggle navigation"
+        aria-controls="dashboardNavMenu"
+        aria-expanded="false"
+      >
+        <span class="nav-toggle-bar" aria-hidden="true"></span>
+        <span class="nav-toggle-bar" aria-hidden="true"></span>
+        <span class="nav-toggle-bar" aria-hidden="true"></span>
+      </button>
+
+      <div class="nav-menu" id="dashboardNavMenu">
+        <nav class="nav-languages" aria-label="Language paths">
+          <button class="lang-btn active" type="button" data-language="Python">Python</button>
+          <button class="lang-btn" type="button" data-language="JavaScript">JavaScript</button>
+          <button class="lang-btn" type="button" data-language="Java">Java</button>
+          <button class="lang-btn" type="button" data-language="C++">C++</button>
+          <button class="lang-btn" type="button" data-language="Go">Go</button>
+        </nav>
+
+        <div class="nav-user">
+          <span class="profile-pill" id="profileName">Guest</span>
+          <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-shell">
+      <section class="learning-grid" aria-label="Learning dashboard">
+        <aside class="sidebar-left" aria-labelledby="skillTreeTitle">
+          <div class="panel skill-tree-panel">
+            <div class="panel-heading">
+              <p class="eyebrow">Skill tree</p>
+              <h2 id="skillTreeTitle">Current path</h2>
+            </div>
+
+            <div class="scroll-box">
+              <ul id="skillList" class="skill-list"></ul>
+            </div>
+
+            <div class="progress-section">
+              <div class="progress-label">
+                <span>Progress</span>
+                <strong id="progressText">0%</strong>
+              </div>
+              <div class="progress-container" aria-hidden="true">
+                <div class="progress-bar" id="progressBar"></div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <section class="content-column">
+          <article class="lesson-card" aria-labelledby="lessonTitle">
+            <div class="lesson-header">
+              <div>
+                <p class="eyebrow" id="lessonLanguage">Python</p>
+                <h1 id="lessonTitle">Lesson: Variables in Python</h1>
+              </div>
+              <button class="pdf-btn" id="downloadPdfBtn" type="button">Download PDF</button>
+            </div>
+
+            <p id="lessonText" class="lesson-text"></p>
+
+            <div class="code-example-box" aria-label="Lesson code example">
+              <pre><code id="lessonCode"></code></pre>
+            </div>
+          </article>
+
+          <section class="playground-card" aria-labelledby="playgroundTitle">
+            <div class="panel-heading compact">
+              <p class="eyebrow">AI code playground</p>
+              <h2 id="playgroundTitle">Practice editor</h2>
+            </div>
+
+            <div class="editor-container">
+              <div class="line-numbers" id="lineNumbers" aria-hidden="true">1</div>
+              <textarea
+                id="codeEditor"
+                spellcheck="false"
+                aria-label="Code editor"
+              ></textarea>
+            </div>
+
+            <div class="action-buttons">
+              <button type="button" class="btn-run" id="runCodeBtn">Run Code</button>
+              <button type="button" class="btn-ai" id="explainCodeBtn">Explain</button>
+              <button type="button" class="btn-ai" id="fixCodeBtn">Fix with AI</button>
+            </div>
+
+            <div class="output-header">Output</div>
+            <pre class="output-box" id="outputBox" aria-live="polite">Select a lesson and run code to see output.</pre>
+          </section>
+        </section>
+      </section>
+
+      <section class="bottom-row" aria-label="Practice and support tools">
+        <section class="question-column">
+          <article class="quiz-container" id="quizBox" aria-labelledby="quizTitle">
+            <div class="quiz-intro-content" id="quizIntro">
+              <p class="eyebrow">Quick check</p>
+              <h2 id="quizTitle">Ready for a quiz?</h2>
+              <p>Answer one focused question for the active lesson.</p>
+              <button class="btn-start-quiz" id="startQuizBtn" type="button">Start Lesson Quiz</button>
+            </div>
+
+            <div class="quiz-questions-area" id="quizQuestions" hidden>
+              <div class="quiz-header">
+                <h2 id="quizQuestionNumber">Question 1 of 1</h2>
+                <span class="quiz-badge" id="quizTopicBadge">Topic: Variables</span>
+              </div>
+
+              <p class="question-text" id="activeQuestionText">Loading question...</p>
+              <div class="quiz-options" id="quizOptions"></div>
+              <div id="quizFeedback" class="quiz-feedback" aria-live="polite"></div>
+
+              <button id="nextQuestionBtn" class="btn-start-quiz" type="button" hidden>
+                Continue
+              </button>
+            </div>
+          </article>
+
+          <section class="chat-container" aria-labelledby="chatTitle">
+            <div class="chat-header">
+              <h2 id="chatTitle">AI Tutor Chat</h2>
+              <span id="chatStatus">Ready</span>
+            </div>
+
+            <div class="chat-messages" id="chatMessages" aria-live="polite">
+              <div class="message ai-message">
+                <strong>AI:</strong>
+                <span>Need help with this lesson? Ask me anything.</span>
+              </div>
+            </div>
+
+            <form class="chat-input-area" id="chatForm">
+              <input
+                type="text"
+                id="chatInput"
+                placeholder="Type your message..."
+                autocomplete="off"
+                required
+              />
+              <button class="send-btn" type="submit">Send</button>
+            </form>
+          </section>
+        </section>
+
+        <aside class="sidebar-right" aria-labelledby="confidenceTitle">
+          <section class="confidence-panel">
+            <div class="panel-heading compact">
+              <p class="eyebrow">Confidence meter</p>
+              <h2 id="confidenceTitle">Learning signal</h2>
+            </div>
+
+            <div class="meter-box-container">
+              <div class="meter-circle" aria-live="polite">
+                <span id="confidenceScore">0%</span>
+                <small id="confidenceTopic">Python</small>
+              </div>
+            </div>
+
+            <div class="score-breakdown">
+              <span class="breakdown-header">Score breakdown</span>
+
+              <div class="stat-row">
+                <div class="stat-info">
+                  <span>Quiz Score</span>
+                  <span id="quizScoreText">0%</span>
+                </div>
+                <div class="stat-bar-bg">
+                  <div class="stat-bar-fill" id="quizScoreBar"></div>
+                </div>
+              </div>
+
+              <div class="stat-row">
+                <div class="stat-info">
+                  <span>Code Accuracy</span>
+                  <span id="codeScoreText">0%</span>
+                </div>
+                <div class="stat-bar-bg">
+                  <div class="stat-bar-fill accent" id="codeScoreBar"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="recommendation-card">
+              <span class="breakdown-header">Recommendation</span>
+              <p class="rec-text" id="recommendationText">
+                Start with a lesson, run the sample code, then complete the quiz.
+              </p>
+            </div>
+          </section>
+        </aside>
+      </section>
+    </main>
+
+    <footer class="main-footer">
+      <div class="footer-content">
+        <div class="footer-section about">
+          <h2 class="footer-logo">AI Learn</h2>
+          <p>
+            Interactive lessons, AI tutoring, and real-time code practice for new
+            software engineers.
+          </p>
+        </div>
+
+        <div class="footer-section links">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="#skillTreeTitle">Skill Tree</a></li>
+            <li><a href="#chatTitle">Support</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section topics">
+          <h3>Learning Paths</h3>
+          <ul>
+            <li><a href="#" data-footer-language="Python">Python Mastery</a></li>
+            <li><a href="#" data-footer-language="JavaScript">Full-Stack JS</a></li>
+            <li><a href="#" data-footer-language="Java">Java Enterprise</a></li>
+            <li><a href="#" data-footer-language="C++">C++ Systems</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section newsletter">
+          <h3>Stay Updated</h3>
+          <p>Get new lessons and AI tips delivered to your inbox.</p>
+          <form class="newsletter-form" id="newsletterForm">
+            <input type="email" id="newsletterEmail" placeholder="Enter email address" required />
+            <button type="submit">Join</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; <span data-current-year>2026</span> AI Learn Platform | Designed by CEOxavier</p>
+      </div>
+    </footer>
+
+    <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+    <script src="api.js"></script>
+    <script src="dashboard.js"></script>
+  </body>
+</html>

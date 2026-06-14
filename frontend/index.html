@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="AI Learn is an interactive programming learning platform with lessons, quizzes, AI tutoring, and a code playground."
+    />
+    <title>AI Learn</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div class="site-shell">
+      <header class="navbar-wrap">
+        <nav class="navbar" aria-label="Primary navigation">
+          <a class="brand" href="index.html">AI <span>Learn</span></a>
+          <button
+            class="nav-toggle"
+            id="homeNavToggle"
+            type="button"
+            aria-label="Toggle navigation"
+            aria-controls="homeNavLinks"
+            aria-expanded="false"
+          >
+            <span class="nav-toggle-bar" aria-hidden="true"></span>
+            <span class="nav-toggle-bar" aria-hidden="true"></span>
+            <span class="nav-toggle-bar" aria-hidden="true"></span>
+          </button>
+          <div class="nav-links" id="homeNavLinks">
+            <a href="#paths">Paths</a>
+            <a href="#features">Features</a>
+            <a href="login.html">Login</a>
+            <a href="signup.html" class="btn">Sign Up Free</a>
+          </div>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <p class="eyebrow">AI-powered programming practice</p>
+            <h1 id="hero-title">Learn programming with a tutor that adapts.</h1>
+            <p>
+              Follow structured lessons, practice in the code playground, ask the AI tutor for
+              help, and track confidence as you move through each language path.
+            </p>
+            <div class="hero-actions">
+              <a href="signup.html" class="btn">Start Learning Free &rarr;</a>
+              <a href="login.html" class="btn secondary">Continue Learning</a>
+            </div>
+          </div>
+
+          <div class="hero-visual" aria-label="AI Learn dashboard preview">
+            <div class="preview-frame">
+              <div class="preview-top">
+                <span>Python / Functions</span>
+                <span class="preview-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+              </div>
+              <pre class="preview-code"><code>def greet(name):
+    return f"Hello, {name}!"
+
+print(greet("Student"))
+
+# AI Tutor:
+# Great start. This function accepts
+# one parameter and returns a message.</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="paths" aria-labelledby="paths-title">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Learning paths</p>
+              <h2 id="paths-title">Languages you can practice</h2>
+            </div>
+            <p>Choose a path, complete lessons, run code, and build confidence topic by topic.</p>
+          </div>
+
+          <div class="card-grid">
+            <article class="card">
+              <strong>Python</strong>
+              <p>Variables, loops, functions, OOP, files, and modules.</p>
+            </article>
+            <article class="card">
+              <strong>JavaScript</strong>
+              <p>Syntax, operators, strings, numbers, loops, and functions.</p>
+            </article>
+            <article class="card">
+              <strong>Java</strong>
+              <p>Type casting, strings, math, booleans, conditionals, and switch.</p>
+            </article>
+            <article class="card">
+              <strong>C++</strong>
+              <p>Syntax, output, variables, input, comments, and data types.</p>
+            </article>
+            <article class="card">
+              <strong>Go</strong>
+              <p>Variables, constants, output, types, arrays, slices, and operators.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="features" aria-labelledby="features-title">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Platform tools</p>
+              <h2 id="features-title">Everything stays connected</h2>
+            </div>
+          </div>
+
+          <div class="feature-grid">
+            <article class="card">
+              <strong>Personalized lessons</strong>
+              <p>Skill trees update as you switch language paths and complete topics.</p>
+            </article>
+            <article class="card">
+              <strong>AI tutor chat</strong>
+              <p>Ask beginner-friendly questions in context of the language you are learning.</p>
+            </article>
+            <article class="card">
+              <strong>Code playground</strong>
+              <p>Run, explain, and fix code from the same dashboard without losing your lesson flow.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="cta-band" aria-labelledby="cta-title">
+          <div class="cta">
+            <div>
+              <h2 id="cta-title">Ready to master programming?</h2>
+              <p>Open the dashboard, choose a path, and build one concept at a time.</p>
+            </div>
+            <a href="signup.html" class="btn">Get Started Free</a>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="footer-inner">
+          <span>&copy; <span data-current-year>2026</span> AI Learn</span>
+          <span>
+            <a href="#paths">Paths</a> |
+            <a href="#features">Features</a> |
+            <a href="login.html">Login</a>
+          </span>
+        </div>
+      </footer>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+      const homeNavToggle = document.getElementById("homeNavToggle");
+      const homeNavLinks = document.getElementById("homeNavLinks");
+
+      function closeHomeNav() {
+        homeNavToggle?.setAttribute("aria-expanded", "false");
+        homeNavLinks?.classList.remove("is-open");
+      }
+
+      homeNavToggle?.addEventListener("click", () => {
+        const isOpen = homeNavToggle.getAttribute("aria-expanded") === "true";
+        homeNavToggle.setAttribute("aria-expanded", String(!isOpen));
+        homeNavLinks.classList.toggle("is-open", !isOpen);
+      });
+
+      homeNavLinks?.addEventListener("click", (event) => {
+        if (event.target.closest("a")) closeHomeNav();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeHomeNav();
+      });
+
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > 640) closeHomeNav();
+      });
+
+      document.querySelectorAll("[data-current-year]").forEach((item) => {
+        item.textContent = new Date().getFullYear();
+      });
+    </script>
+  </body>
+</html>

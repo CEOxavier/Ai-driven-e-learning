@@ -1,0 +1,25 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "AI Learn backend API for authentication, AI tutoring, and code execution.",
+  "main": "server.js",
+  "scripts": {
+    "check": "node --check server.js",
+    "dev": "node server.js",
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "ai",
+    "e-learning",
+    "express"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  }
+}

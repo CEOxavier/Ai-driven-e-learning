@@ -1,0 +1,17 @@
+node_modules/
+.env
+.env.*
+!.env.example
+*.log
+coverage/
+dist/
+build/
+backend/data/users.json
+backend/data/*.tmp
+backend/runtime/
+backend/Main.java
+backend/Main.class
+backend/main.cpp
+backend/main_out
+backend/main_out.exe
+tools/
