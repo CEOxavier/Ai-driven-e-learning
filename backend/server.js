@@ -855,7 +855,8 @@ function createApp(options = {}) {
 
   const frontendDir = path.join(__dirname, "..", "frontend");
   if (fs.existsSync(frontendDir)) {
-    app.use("/app", express.static(frontendDir, { extensions: ["html"] }));
+    app.use(express.static(frontendDir, { extensions: ["html"], index: "index.html" }));
+    app.use("/app", express.static(frontendDir, { extensions: ["html"], index: "index.html" }));
     app.get("/app", (req, res) => res.redirect("/app/index.html"));
   }
 
