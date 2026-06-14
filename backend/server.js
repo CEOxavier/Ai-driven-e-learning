@@ -824,35 +824,42 @@ function fallbackExplain(code, language) {
 
 function fallbackFix(code, language) {
   let text = String(code || "");
-  // Simple deterministic cleanups that often fix trivial issues.
-  // 1) Replace smart quotes with straight quotes
-  text = text.replace(/[\u2018\u2019\u201C\u201D]/g, (c) => (c === '“' || c === '”' ? '"' : "'"));
-  // 2) Convert tabs to 4 spaces
-  text = text.replace(/\t/g, "    ");
-  // 3) Trim trailing whitespace on each line
-  text = text.split(/\r?\n/).map((l) => l.replace(/[ \t]+$/g, "")).join("\n");
-  // 4) Ensure file ends with newline
-  if (!text.endsWith("\n")) text += "\n";
+  const original = text;
 
-  // 5) Try to fix simple unmatched quotes and parentheses
+  // Minimal corrections only --- avoid rewriting or cleaning code unnecessarily.
+  text = text.replace(/[\u2018\u2019\u201C\u201D]/g, (c) => (c === '“' || c === '”' ? '"' : "'"));
+
+  if (language === "JavaScript") {
+    if (/\bprint\s*\(/.test(text)) {
+      text = text.replace(/\bprint\s*\(/g, "console.log(");
+    }
+  }
+
+  if (language === "Python") {
+    if (/console\.log\s*\(/.test(text)) {
+      text = text.replace(/console\.log\s*\(/g, "print(");
+    }
+  }
+
   const countChars = (s, ch) => (s.split(ch).length - 1);
-  const doubleQuotes = countChars(text, '"');
-  const singleQuotes = countChars(text, "'");
   const openPar = countChars(text, '(');
   const closePar = countChars(text, ')');
+  const openBrace = countChars(text, '{');
+  const closeBrace = countChars(text, '}');
+  const openBracket = countChars(text, '[');
+  const closeBracket = countChars(text, ']');
 
-  if (doubleQuotes % 2 === 1) {
-    text = text + '"\n';
-  }
-  if (singleQuotes % 2 === 1) {
-    text = text + "'\n";
-  }
   if (openPar > closePar) {
-    text = text + ')\n'.repeat(openPar - closePar);
+    text += ')'.repeat(openPar - closePar);
+  }
+  if (openBrace > closeBrace) {
+    text += '}'.repeat(openBrace - closeBrace);
+  }
+  if (openBracket > closeBracket) {
+    text += ']'.repeat(openBracket - closeBracket);
   }
 
-  // Return cleaned code; if no changes were made, include a note so frontend can inform the user.
-  return text;
+  return text === original ? original : text;
 }
 
 function asyncHandler(handler) {
@@ -965,6 +972,16 @@ function createApp(options = {}) {
       service: "AI Learn backend",
       uptime: process.uptime(),
       aiConfigured: Boolean(process.env.GEMINI_API_KEY || options.geminiApiKey),
+    });
+  });
+
+  app.get(["/deploy-check", "/api/deploy-check"], (req, res) => {
+    res.json({
+      ok: true,
+      aiConfigured: Boolean(process.env.GEMINI_API_KEY || options.geminiApiKey),
+      port,
+      allowedOrigins: getEnvList("CLIENT_ORIGIN", DEFAULT_ALLOWED_ORIGINS),
+      availableRuntimes: Array.from(availableRuntimes).sort(),
     });
   });
 

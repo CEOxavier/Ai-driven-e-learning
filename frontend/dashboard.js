@@ -984,6 +984,6 @@
     exposeCompatibilityGlobals();
     initializeProfile();
     updateConfidence();
-    changeLanguage("Python");
+    changeLanguage("JavaScript");
   });
 })(window, document);
