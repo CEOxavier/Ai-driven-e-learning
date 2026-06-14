@@ -734,7 +734,7 @@
         }),
       });
 
-      setOutput(text, "success");
+      setOutput(text.trim() || "No output was produced by the program.", "success");
       updateScore("code", 8);
     } catch (error) {
       setOutput(error.message || "Code execution failed.", "error");
@@ -758,7 +758,7 @@
         timeout: 30000,
       });
 
-      setOutput(text, "success");
+      setOutput(text.trim() || "The AI did not return an explanation. Please try again.", "success");
     } catch (error) {
       setOutput(error.message || "AI explanation failed.", "error");
     } finally {
@@ -780,7 +780,7 @@
         timeout: 30000,
       });
 
-      elements.codeEditor.value = stripCodeFence(text);
+      elements.codeEditor.value = stripCodeFence(text || "");
       updateLineNumbers();
       setOutput("Code fixed successfully.", "success");
     } catch (error) {

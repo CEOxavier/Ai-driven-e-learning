@@ -71,7 +71,9 @@
       if (authToken) setSession(authToken, username);
 
       if (!response.ok) {
-        const error = new Error(text || response.statusText || "Request failed.");
+        const error = new Error(
+          text || `${response.status} ${response.statusText}` || "Request failed."
+        );
         error.status = response.status;
         throw error;
       }
