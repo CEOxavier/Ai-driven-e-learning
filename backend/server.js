@@ -834,6 +834,23 @@ function fallbackFix(code, language) {
   // 4) Ensure file ends with newline
   if (!text.endsWith("\n")) text += "\n";
 
+  // 5) Try to fix simple unmatched quotes and parentheses
+  const countChars = (s, ch) => (s.split(ch).length - 1);
+  const doubleQuotes = countChars(text, '"');
+  const singleQuotes = countChars(text, "'");
+  const openPar = countChars(text, '(');
+  const closePar = countChars(text, ')');
+
+  if (doubleQuotes % 2 === 1) {
+    text = text + '"\n';
+  }
+  if (singleQuotes % 2 === 1) {
+    text = text + "'\n";
+  }
+  if (openPar > closePar) {
+    text = text + ')\n'.repeat(openPar - closePar);
+  }
+
   // Return cleaned code; if no changes were made, include a note so frontend can inform the user.
   return text;
 }
@@ -1140,11 +1157,8 @@ ${code}
         const text = await ai.generate(prompt);
         return res.send(text);
       } catch (err) {
-        // If AI is not configured, provide a lightweight local explanation
-        if (err && (err.statusCode === 503 || /not configured/i.test(err.message || ""))) {
-          return res.send(fallbackExplain(code, language));
-        }
-        throw err;
+        console.error("AI generate error for /explain; using fallback.", err && err.message);
+        return res.send(fallbackExplain(code, language));
       }
     }),
   );
@@ -1177,11 +1191,8 @@ ${code}
         const text = await ai.generate(prompt);
         return res.send(stripCodeFence(text));
       } catch (err) {
-        if (err && (err.statusCode === 503 || /not configured/i.test(err.message || ""))) {
-          // Provide a simple deterministic cleanup when AI isn't available.
-          return res.send(fallbackFix(code, language));
-        }
-        throw err;
+        console.error("AI generate error for /fix; using fallback.", err && err.message);
+        return res.send(fallbackFix(code, language));
       }
     }),
   );
